@@ -1,0 +1,73 @@
+\section{Optische Objekterkennung und -klassifizierung} \label{sec:literatur}
+
+In modernen Fahrzeugen kommen hauptsächlich Kameras als Sensoren zum Einsatz, um die Umgebung des Fahrzeugs zu erfassen. Die so erstellten Aufnahmen enthalten Objekte, die anschließend erkannt und klassifiziert werden, um die Fahraufgabe zu unterstützen. Die Erkennung und Klassifizierung wird bei maschinellen Lernverfahren oft durch die Verwendung von \acp{CNN} realisiert. \acp{CNN} für die Objekterkennung werden in zwei Gruppen unterteilt: One-Stage- und Two-Stage-Modelle. Die One-Stage-Modelle arbeiten mit einem einzigen \ac{CNN} und bestimmen in einem Durchlauf die Wahrscheinlichkeiten einer Klasse sowie die Koordinaten der Bounding Box. \cite{DeLasHeras2021AdvancedDA} Im Gegensatz dazu schlagen Two-Stage-Modelle erst eine Reihe von \ac{RoI} durch ein \ac{RPN} vor, die im zweiten Schritt an einen Objektklassifizierer gesendet werden. One-Stage-Modelle sind in der Regel schneller, weisen jedoch in der Regel eine geringere Genauigkeit auf. \cite{accurateObjectDetection}
+
+\subsection{Evaluationsmetriken}
+
+Die \ac{mAP} ist eine Metrik, die häufig zur Bewertung der Leistung von Objekterkennungssystemen verwendet wird. Sie ermöglicht eine umfassende Bewertung der Genauigkeit und Effizienz eines Modells bei der Erkennung und Lokalisierung von Objekten in Bildern. Zur Berechnung der \ac{mAP} sind zunächst die Precision und der Recall erforderlich. Die Precision bezeichnet den Anteil der korrekt erkannten Objekte an allen erkannten Objekten. Der Recall ist der Anteil der korrekt erkannten Objekte an allen tatsächlich vorhandenen Objekten. Die Average Precision wird für jede Klasse berechnet und ist die Fläche unter der Precision-Recall-Kurve. Die daraus abgeleitete \ac{mAP} stellt demnach den Durchschnitt der Average Precision über alle Klassen dar. \cite{mAP} 
+
+\subsection{Bounding-Box-Regression}
+
+Das Bestimmen der Position eines Objekts im Raum stellt ein Bounding-Box-Regression-Problem dar. Eine Bounding Box ist eine rechteckige Region, die um ein Objekt gefasst ist. Die Bounding Boxes bestehen aus vier Werten: den X- und Y-Koordinaten der linken oberen Ecke sowie der Breite und Höhe der Box. Ziel der Bounding-Box-Regression ist die Vorhersage der Koordinaten eines Objekts. \cite{BoundingBoxRegression} 
+
+Dabei wird dem Modell ein Bild mit einer annotierten Bounding Box – der Ground Truth – gezeigt und das Modell gibt eine eigene Vorhersage ab, wo sich das Objekt befinden könnte. Die Abweichung zwischen der Vorhersage und der Ground Truth wird anschließend mit einer Loss-Funktion berechnet. Das Modell wird trainiert, um den Fehler zu minimieren. \cite{BoundingBoxRegression}
+
+Die Loss-Funktion für die Bounding-Box-Regression kann auf verschiedene Arten berechnet werden. Eine Möglichkeit ist der Mean Absolute Error, auch L1 Loss genannt. Er berechnet den absoluten Fehler zwischen der Vorhersage und der Ground Truth. Ein alternativer Ansatz ist der Mean Squared Error, auch L2 Loss genannt. Dieser Ansatz berechnet den quadratischen Fehler zwischen der Vorhersage und der Ground Truth. \cite{fastrcnn}
+Der beliebteste Ansatz ist der \ac{IoU} Loss. Er berechnet die Überschneidung der vorhergesagten Fläche mit der Ground Truth Bounding Box. Er zielt dabei auf eine möglichst hohe Überschneidung, also ein hohen \ac{IoU}-Wert ab. \cite{BoundingBoxRegression}
+
+Die Formel für das Ähnlichkeitsmaß \ac{IoU} ist wie folgt definiert:
+
+\[
+\text{IoU} = \frac{|B \cap B_{\text{gt}}|}{|B \cup B_{\text{gt}}|}
+\]
+
+Der \ac{IoU} Loss wird dann wie folgt ausgedrückt:
+
+\[
+\text{IoU Loss} = 1 - \text{IoU}
+\]
+
+Hierbei ist \(|B \cap B_{\text{gt}}|\) die Überlappung der Flächen der vorhergesagten Bounding Box \(B\) und der Ground Truth Bounding Box \(B_{\text{gt}}\). \(|B \cup B_{\text{gt}}|\) ist die kombinierte Fläche der beiden Bounding Boxes. \cite{BoundingBoxRegression}
+
+Mit dieser Loss-Funktion kann die Bounding-Box-Regression mit einem Stochastic Gradient Descent Algoritmus durchgeführt werden. Bei fehlender Überschneidung der Bounding Boxes ist ein Funktionieren des \ac{IoU} Loss jedoch nicht möglich. Um dies zu beheben, ist die Hinzufügung eines Penalty Terms erforderlich, der die minimale nomalisierte Distanz zweier Bounding Boxes anstrebt. Am besten lässt sich dies mit dem Distance-IoU Loss (DIoU) erreichen. Die Verwendung des DIoU Loss beim Training von YOLOv3 auf den PASCAL VOC Datensatz hat gezeigt, dass die Average Precision um 3,29\% gegenüber dem normalem \ac{IoU} verbessert werden konnte. Dies ist ein beachtlicher Wert. \cite{BoundingBoxRegression}
+% sagen wie der DIoU, die AP verbessert
+
+\subsection{Klassifikation}
+
+Für die Klassifikation der Objekte in den erkannten Bounding Boxes existieren verschiedene Methoden. Zu den bekannten Methoden zählen Gradient Boosting Machines, Naive Bayes, Support Vector Machines, Logic Regression, Random Forests und \acp{CNN}. \cite{driverClassification} Bei den \ac{CNN} One-Stage-Modellen wird die Klassifikation im selben Netz durchgeführt wie auch die Bounding-Box-Regression. Bei Two-Stage-Modellen wird die Klassifikation in einem separaten Netz durchgeführt. \cite{DeLasHeras2021AdvancedDA} In der Praxis finden jedoch in der Regel tiefe neuronale Netzwerk-Ansätze Anwendung, da sie eine hohe Anpassungsfähigkeit aufweisen und sich für die meisten Datensätze und Anwendungsgebiete eignen. \cite{driverClassification} Häufig wird der "Adam"-Optimizer eingesetzt, der die Gewichte während des Trainings mit adaptiver Lernrate anpasst, um die Loss-Funktion zu minimieren. Für die Hidden Layers wird eine nichtlineare Aktivierungsfunktion wie "ReLU" verwendet und für die Output Layers die "Sigmoid" Aktivierungsfunktion. \cite{liebgott2022}, \cite{driverClassification}
+
+\subsection{One-Stage-Modelle}
+
+\subsubsection{YOLO}
+
+Ein Beispiel für ein One-Stage-Modell ist \ac{YOLO}. Es handelt sich um ein schnelles und effizientes Modell, das die Objekterkennung und -klassifizierung in dem selben \ac{CNN} durchführt. Das Bild wird in ein Gitter unterteilt und jede Gitterzelle ist für die Vorhersage einer Bounding Box und einer Klassenwahrscheinlichkeit verantwortlich. Das Modell wird heutzutage kontinuierlich weiterentwickelt und entspricht dem aktuellen Stand der Technik. \cite{YOLO} 
+
+Die \ac{YOLO}-Produktfamilie ist seit dem 18. Februar 2025 in der neuesten Version 12 verfügbar. Angepasst an das Beispiel der \ac{ADAS} Anwendungen wurde \ac{YOLO} in einem wissenschaftlichen Benchmark auf das Traffic Sign Dataset von Radu Opera trainiert. YOLOv12x (x steht dabei für extra large) erzielte eine \ac{mAP}50 von 88,9\%. YOLOv8x erreichte eine \ac{mAP}50 von 87,4\%. \cite{benchmark} 
+
+Bei der praktischen Anwendung von \ac{YOLO} ist es jedoch unerlässlich, die Balance zwischen Schnelligkeit, Genauigkeit und Rechenleistung zu finden. Die neuesten Modelle mit sehr hoher Genauigkeit für die Erkennung kleiner Objekte sind jedoch auch sehr rechenintensiv. Dies kann die Eignung für den Einsatz in Fahrzeugen einschränken. Für den Einsatz in \ac{ADAS} Anwendungen werden daher Modelle empfohlen, die eine optimale Balance zwischen Schnelligkeit, Genauigkeit und Rechenleistung aufweisen. Für diese Anwendungen werden die Modelle YOLOv10 und YOLOv11 nano, small und medium empfohlen. \cite{benchmark} 
+
+Bei einem wissenschaftlichen Benchmark mit YOLOv10 nano, small und medium auf das MS COCO Dataset konnte eine Latenz pro Bild von unter 5ms erreicht werden. Die Average Precision lag dabei konstant über 40\%. Diese Werte wurden mit dem Einsatz einer High-End NVIDA T4 GPU erreicht. \cite{yolospeed} Obwohl der Trend dahin geht, im Auto immer mehr Rechenleistung zu verbauen, ist es dennoch wahrscheinlich, dass in Echt-Welt \ac{ADAS} Anwendungen diese Latenzwerte nicht erreicht werden können. Sie geben jedoch eine gute Orientierung in welcher Größenordnung sich die Latenz bewegen könnte. 
+
+Allerdings sind auch Nachteile in Bezug auf Genauigkeit und Schnelligkeit zu berücksichtigen. Das größte Problem von \ac{YOLO} und anderen One-Stage-Modellen ist, dass kleine Objekte, die in Gruppen auftauchen, nicht gut klassifiziert werden können. \cite{YOLO} Um das Trainingset auch für kleine Objekte zu erweitern und die Robustheit des Modells zu erhöhen, wird Data Augmentation eingesetzt. Hierzu werden strategische Stellen des Bildes in verschiedenen Auflösungen vergrößert und daraufhin expliziert die vergrößerten Merkmale trainiert. \cite{SSD} Wenn die Verbesserung des Trainingsets durch Data Augmentation nicht möglich ist, empfiehlt es sich, die large und extra-large \ac{YOLO}-Modelle zu verwenden, um eine bessere Genauigkeit zu erzielen. \cite{benchmark}
+
+% YOLO in schlechten wetterlagen:
+Ein weiteres Problem bei \ac{ADAS} Anwendungen ist die eingeschränkte Datenlage von Bildern in schlechten Wetterlagen. Es sind viele Datensätze für gute Wetterlagen öffentlich verfügbar, allerdings in Bedingugen wie Starkregen oder Nebel gibt es keine passenden Daten. Um das Problem der Datensammlung zu umgehen, empfiehlt es sich, ein Denoising \ac{DNN} zu verwenden, um die schlechten Bilder vorzuverarbeiten. Das \ac{DNN} wird auf den Bildern im schlechten Wetter trainiert und kann anschließend die Bilder in gute Wetterlagen umwandeln. Im Anschluss können die umgewandelten Bilder zur Objekterkennung an ein normales \ac{YOLO} Modell weitergegeben werden. Um Bilder in schlechten Wetterlagen zu erstellen wurden verschiedene Data Augumentation Techniken auf dem KITTI Datensatz angewendet. KITTI ist ein bestehender Datensatz für \ac{ADAS}. Mit dem Denoising \ac{DNN} konnte auf diesem Datensatz eine Verbesserung der \ac{mAP} mit dem YOLOv8n Modell von 4\% auf 70\% gezeigt werden. \cite{AdverseWeather} 
+
+\subsubsection{RetinaNet}
+
+Ein weiteres häufig eingesetztes One-Stage-Modell ist RetinaNet. RetinaNet ist ein einstufiges Objekterkennungsmodell, das eine Focal Loss-Funktion verwendet, um das Ungleichgewicht der Klassen während des Trainings zu berücksichtigen. Der Focal Loss ist ein dynamisch skalierbarer Cross-Entropy Loss, der den Verlust für gut klassifizierte Beispiele herabsetzt und den Verlust für schwer zu klassifizierende Beispiele erhöht. Diese Funktion hilft dem Modell, sich auf schwierige Beispiele zu konzentrieren und die Leistung bei der Erkennung seltener Klassen zu verbessern. RetinaNet ist ein einziges, einheitliches Netz, das aus einem Backbone-Netz und zwei aufgabenspezifischen Teilnetzen besteht. Das Backbone-Netz ist für die Berechnung einer Faltungsmerkmalskarte über das gesamte Eingabebild verantwortlich und ist ein Standard \ac{CNN}. Das erste Teilnetz führt eine Objektklassifizierung mittels \acp{CNN} am Ausgang des Backbone durch, während das zweite Teilnetz eine Bounding-Box-Regression mittels \acp{CNN} durchführt. \cite{RetinaNet} 
+
+RetinaNet soll durch den Focal Loss so akkurat sein wie Two-Stage-Modelle, aber dennoch den Vorteil der Schnelligkeit von One-Stage-Modellen behalten. Deswegen eignet es sich gut für Aufgaben im Auto. \ac{ADAS} Anwendungen wie die Erkennung von dynamischen Informationsschildern auf Straßen sind mögliche Anwendungsbereiche von RetinaNet. \cite{DeLasHeras2021AdvancedDA}
+
+
+\subsection{Two-Stage-Modelle}
+
+Wie der Name der Two-Stage-Modelle bereits andeutet, ist der Erkennungsprozess in zwei klar definierte Stufen unterteilt \cite{FasterRCNN}:
+\begin{enumerate}
+    \item Region Proposal (Erste Stufe): In dieser Stufe werden mit Hilfe eines \ac{CNN} Backbone-Netzwerk hirarchische Eigenschaften aus dem Eingabebild extrahiert. Basierend auf diesen Eigenschaften wird dann mittels \ac{RPN} potenzielle Bereiche im Bild identifiziert, die möglicherweise Objekte enthalten. Dieser Schritt beantwortet die Frage "Wo könnten Objekte sein?" und generiert sogenannte Region Proposals oder \ac{RoI}.
+    \item Klassifikation und Verfeinerung (Zweite Stufe): In dieser Stufe werden die \ac{RoI} genauer analysiert und mittels Klassifikator eingestuft. Durch den Bounding-Box-Regressor werden die genauen Positionen der Objekte in den \ac{RoI} bestimmt. Diese Phase beantwortet die Frage "Was ist in den identifizierten Regionen?". Sie liefert die endgültigen Klassifikationen und Bounding Boxen für die erkannten Objekte.
+\end{enumerate}
+
+Die bekanntesten Vertreter der Two-Stage-Modelle gehören zur Familie der R-CNN (Region-based \acl{CNN}). Das neueste Modell der R-CNN Familie ist das Mask R-CNN. Es ist eine Erweiterung des Faster R-CNN und fügt eine zusätzliche Segmentierungsmaske für die Objekte in den \ac{RoI} hinzu. Diese Erweiterung ermöglicht eine präzisere Segmentierung der Objekte im Bild. \cite{MaskRCNN} Das Faster R-CNN fügt ein \ac{RPN} hinzu. Das \ac{RPN} ist ein "fully convolutional network (FCN)"\cite{FasterRCNN}, das die Region Proposals generiert. Es nutzt eine Sliding-Window-Technik, um verschiedene Ankerboxen über das Bild zu schieben und die Wahrscheinlichkeit zu berechnen, dass sich in jeder Box ein Objekt befindet. Das \ac{RPN} wird mit Back-Propagation und dem Stochastic Gradient Descent Algoritmus trainiert. \cite{FasterRCNN} 
+
+Das Training von Faster R-CNN auf den PASCAL VOC 2007 und 2012 Datensätzen und das anschließende Fine-Tuning mit dem MS COCO Datensatz resultieren in einer \ac{mAP} von 78,8\% auf dem PASCAL VOC 2007 Datensatz. Dieser Wert ist als sehr gut einzustufen, allerdings ist das Modell auch sehr rechenintensiv und benötigt viel Rechenleistung. Pro verarbeitetem Bild werden ca. 200ms benötigt. Dies erlaubt einem Objekterkennungssystem nur etwa fünf Bilder pro Sekunde zu verarbeiten. \cite{FasterRCNN} Für moderne \ac{ADAS} ist die Verarbeitungszeit pro Bild jedoch um Größenordnungen zu hoch. Für Anwendungen, die kritische Entscheidungen erfordern, ist eine niedrigere Verarbeitungszeit daher unerlässlich.

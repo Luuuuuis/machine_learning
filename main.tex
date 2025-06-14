@@ -1,0 +1,101 @@
+\documentclass[12pt, titlepage, a4paper, numbers=endperiod]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[autostyle, german]{csquotes}
+\MakeOuterQuote{"}
+\usepackage[a4paper,
+    lmargin={2.8cm},
+    rmargin={2.8cm},
+    tmargin={2.5cm},
+    bmargin={2.5cm},
+    lines={45},
+    headsep=\baselineskip,
+    footskip=\baselineskip]{geometry}
+\sloppy
+\usepackage{graphicx}
+\usepackage[automark]{scrlayer-scrpage}
+\usepackage[onehalfspacing]{setspace}
+\usepackage{helvet}
+\usepackage{wrapfig}
+\usepackage[numbers]{natbib}
+\usepackage{float}
+\usepackage[newfloat]{minted}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{acronym}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{datetime}
+
+\setlength{\footskip}{10mm}
+
+\newdateformat{monthyeardate}{%
+  \monthname[\THEMONTH], \THEYEAR}
+
+% Kopf- und Fußzeile
+\chead{\headmark}
+\cofoot{Luis Bros}
+\rofoot{Seite \pagemark}
+\lofoot{\monthyeardate\date{}{April, }{2025}}
+
+\KOMAoptions{
+   headsepline = true,
+   footsepline = true,
+   plainfootsepline = true,
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5\baselineskip}
+
+% PDF Einstellungen
+\hypersetup{
+    pdftitle={Seminararbeit Maschinelles Lernen},
+    pdfauthor={Luis Bros},
+}
+
+\begin{document}
+
+\input{structure/title.tex}
+\newpage
+
+% \input{structure/sperrvermerk.tex}
+% \thispagestyle{empty}
+% \newpage
+
+\input{structure/erklaerung.tex}
+\thispagestyle{empty}
+\newpage
+
+% \input{structure/abstract.tex}
+% \thispagestyle{empty}
+% \newpage
+
+% \listoffigures
+% \listoflistings
+% \listoftables
+\thispagestyle{empty}
+
+\input{structure/acronyms.tex}
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\setcounter{page}{1}
+
+\input{chapters/01_einleitung/00_Einleitung.tex}
+\input{chapters/02_literatur/00_Literatur.tex}
+\input{chapters/06_ausblick/00_Ausblick.tex}
+
+\newpage
+\bibliographystyle{luisIEEE}
+\bibliography{literatur.bib}
+
+\end{document}

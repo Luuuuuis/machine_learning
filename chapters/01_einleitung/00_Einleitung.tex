@@ -1,0 +1,15 @@
+\section{Einleitung} \label{sec:einleitung}
+
+Fahrerassistenzsysteme (\textit{eng. \ac{ADAS}}) sind in der Automobilindustrie mitlerweile weit verbreitet und zielen darauf ab, die Fahrsicherheit zu erhöhen und den Fahrkomfort zu verbessern. Sie unterstützen den Fahrer bei Ausführung der Fahraufgabe und können in verschiedenen Situationen intervenieren, um Unfälle zu vermeiden. \cite{HistoryAndFutureADAS}
+
+Die verschiedenen Funktionen von Fahrerassistenzsystemen werden in verschiedene Level unterteilt, die sich durch den Grad der Automatisierung unterscheiden. Die Einordnung erfolgt in Anlehnung an die SAE J3016 Norm, die sechs Automatisierungsstufen definiert \cite{HistoryAndFutureADAS}:
+\begin{itemize}
+    \item \textbf{Level 0}: Keine Automatisierung; Bieten lediglich Informationen, wie z.B. Parksensoren
+    \item \textbf{Level 1}: Fahrassistenz; Der Fahrer übernimmt die Kontrolle über das Fahrzeug, aber das System unterstützt ihn, wie z.B. \ac{ABS}, \ac{ACC}
+    \item \textbf{Level 2}: Teilautomatisierung; Das System übernimmt die Kontrolle über das Fahrzeug, aber der Fahrer muss bereit sein, die Kontrolle zu übernehmen, wie z.B. Highway Assist (\ac{ACC}, Spurhalteassistent und Spurwechselassistent vereint) 
+    \item \textbf{Level 3}: Bedingte Automatisierung; Das System übernimmt die Kontrolle über das Fahrzeug, aber der Fahrer muss bereit sein, die Kontrolle zu übernehmen, wenn das System ihn dazu auffordert, wie z.B. "Merceds-Benz Drive Pilot" \cite{mbdrivepilot}
+    \item \textbf{Level 4}: Hochautomatisierung; Das System übernimmt die Kontrolle über das Fahrzeug und der Fahrer muss nicht ständig bereit sein, die Kontrolle zu übernehmen, wie z.B. Waymo \cite{Waymo}
+    \item \textbf{Level 5}: Vollautomatisierung; Das Fahrzeug ist vollautonom und benötigt keinen Fahrer und besitzt oft auch keine Pedale oder Lenkrad
+\end{itemize}
+
+In der vorliegenden Arbeit wird der Fokus auf die visuelle Objekterkennung gelegt, da ein signifikanter Anteil der Funktionen von Fahrerassistenzsystemen (insbesondere der Kategorien Level 0 bis 2) auf der Objekterkennung basiert. Dies passiert durch Sensoren wie Kameras, Radar und LiDAR. Diese Sensoren erfassen Informationen über die Umgebung des Fahrzeugs in Form von 2D oder 3D Representationen. So wird es dem System ermöglicht, Objekte wie andere Fahrzeuge, Fußgänger, Radfahrer und Verkehrszeichen zu erkennen und zu klassifizieren. \cite{HistoryAndFutureADAS}

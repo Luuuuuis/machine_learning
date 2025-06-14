@@ -1,0 +1,21 @@
+\section{Zusammenfassgung, Reflexion \& Ausblick} \label{sec:ausblick}
+
+Für \ac{ADAS} Anwendungen werden One-Stage-Modelle bevorzugt, da sie schneller sind und auf die begrenzte Rechenleistung der Fahrzeuge passen. \cite{DeLasHeras2021AdvancedDA}
+Grade das beliebte \ac{YOLO} Modell konnte zeigen, dass es um Vielfaches schneller als Two-Stage-Modelle wie Faster R-CNN ist. \cite{FasterRCNN} 
+
+Folgende Probleme in der Objekterkennung wurden in dieser Arbeit behandelt und Mögliche Lösungen vorgestellt:
+\begin{itemize}
+    \item \textbf{Kleine Objekte}: Hier wurde eine Data Augmentation Technik vorgestellt, die die Merkmale von verschiedenen vergrößerten Auflösungen kombiniert, um kleine Objekte besser zu erkennen. Auch empfiehlt es sich, größere Modelle zu verwenden.
+    
+    \item \textbf{Verdeckungen bei schlechten Wetterlagen}: Hier wurde eine Data Augmentation Technik vorgestellt, die Regen- und Nebeleffekte erzeugt. Diese können dann mit einem Denoising \ac{DNN} entfernt werden.
+
+    \item \textbf{Echt-Zeit Performance}: Hierzu wurden One- und Two-Stage-Modellen verglichen und erkannt, dass kleine One-Stage-Modelle wie \ac{YOLO} und RetinaNet für Echt-Zeit Anwendungen besser geeignet sind. 
+\end{itemize}
+
+Weitere Untersuchungen auf diversere Datensätze sind notwendig, um die Robustheit weiter zu steiger. Es müssen mehr Datensätze in schwirigen Wetterlagen aus der Echten Welt erhoben werden, um diese Systeme universall und ortsunabhängig anbieten zu können. 
+
+Zusätzlich sollten zukünftige Untersuchungen auf die Integration von Multi-Sensor-Datenfusion abzielen, um die Genauigkeit und Robustheit der Objekterkennung zu verbessern. Die Kombination von Kameradaten mit LiDAR, Radar oder anderen Sensordaten könnte helfen, die Einschränkungen einzelner Sensoren zu überwinden.
+
+Ein weiterer wichtiger Aspekt ist die Untersuchung von energieeffizienten Modellen, die speziell für den Einsatz in ressourcenbeschränkten Umgebungen wie Fahrzeugen optimiert sind. Hier könnten Techniken wie Modellkompression, Quantisierung und prädiktive Codierung eine Rolle spielen.
+
+Schließlich ist die Entwicklung von Modellen, die besser mit seltenen oder unerwarteten Szenarien umgehen können, von entscheidender Bedeutung. Dies könnte durch den Einsatz von Generative Adversarial Networks (GANs) oder anderen Methoden zur Erzeugung synthetischer Daten erreicht werden, um die Modelle auf Edge Cases vorzubereiten.
